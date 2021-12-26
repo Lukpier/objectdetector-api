@@ -17,6 +17,7 @@ MODELS = {
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class ObjectDetector:
@@ -31,15 +32,12 @@ class ObjectDetector:
     
         self._confidence = config["confidence"]
         
-        # set the device we will be using to run the model
-        # set of bounding box colors for each class
-        self._colors = np.random.uniform(0, 255, size=(len(self._classes), 3))
         end = time.time()
         logger.info("Object detector started in {} ms", end- start)
 
     
         
-    def detect(self, image: Image) -> ResponseModel:
+    def detect(self, image: Image) -> dict:
         image = ObjectDetector.to_opencv(image)
         # convert the image from BGR to RGB channel ordering and change the
         # image from channels last to channels first ordering
@@ -69,19 +67,25 @@ class ObjectDetector:
                 # extract the index of the class label from the detections,
                 # then compute the (x, y)-coordinates of the bounding box
                 # for the object
+                score = float(score.detach().cpu().numpy().take(0))
                 idx = int(detections["labels"][i])
                 arr_box = detections["boxes"][i].detach().cpu().numpy()
-                (startX, startY, endX, endY) = arr_box.astype("int")
-                box = Box(startX, startY, endX, endY)
-                # display the prediction to our terminal
-                label = "{}: {:.2f}%".format(self._classes[idx], score * 100)
-                logger.info("Detected entity: {}".format(label))
+                (startX, startY, endX, endY) = arr_box.astype("float")
+                box = {"startX": startX, "startY": startY, "endX": endX, "endY":endY}
+                label = self._classes[idx]
+                logger.info(f"Detected entity: {self._classes[idx]}: {str(score * 100)}")
                 
                 labels.append(label)
                 boxes.append(box)
                 scores.append(score)
         
-        return ResponseModel(detections = Detections(labels, scores, boxes))       
+        return {
+            "detections": {
+                "labels": labels,
+                "scores": scores,
+                "boxes": boxes
+            }
+        }
     
 
 

@@ -4,7 +4,7 @@ from app.version import VERSION, APP_NAME
 from app.model import ResponseModel
 import json
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 import os
 import sys
 from PIL import Image
@@ -12,6 +12,7 @@ from io import BytesIO
 import logging
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 config_path = os.environ.get("CONFIG_PATH", "config/config.json")
 try:
@@ -31,8 +32,8 @@ def hello():
                <b>{APP_NAME}: {VERSION}</b> 
             '''
 
-@app.post('/predict', response_model=ResponseModel)
-async def predict(image: UploadFile = File(...)):
+@app.post('/api/predict')
+async def predict(image: UploadFile = File(...), response_class=JSONResponse):
     image = read_image(await image.read())
     metadata = object_detector.detect(image)
     return metadata

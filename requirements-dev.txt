@@ -1,7 +1,8 @@
 fastapi
-pytorch
+torch
 torchvision
 python-multipart
+opencv-contrib-python
 pytest
 requests
 uvicorn

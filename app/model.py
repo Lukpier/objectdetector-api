@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import List
-from pydantic import BaseModel
 
 @dataclass
 class Box:
@@ -16,6 +15,6 @@ class Detections:
     boxes: List[Box]
 
 @dataclass
-class ResponseModel(BaseModel):
+class ResponseModel:
     detections: Detections
     
