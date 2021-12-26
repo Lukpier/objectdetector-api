@@ -7,9 +7,10 @@ Takes an image as input and returns metadata (JSON), extracted from the image
 
 ## Development
 
-1. `conda create --name objectdetector --file requirements-dev.txt`
-2. activate venv via: `conda activate objectdetector`
-3. enjoy!
+1. `python3 -m venv .venv`
+2. activate venv via: `source .venv/bin/activate`
+3. `pip install -r requirements-dev.txt`
+4. enjoy!
 
 ## Tests
 Run `python3 -m pytest` into project-root. This will trigger unit tests and a simple Demo that:
