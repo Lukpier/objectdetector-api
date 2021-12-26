@@ -9,6 +9,7 @@ import sys
 from PIL import Image
 from io import BytesIO
 import logging
+import uvicorn
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ def hello():
             """
 
 
-@app.post("/predict", response_model=ResponseModel)
+@app.post("/api/predict", response_model=ResponseModel)
 async def predict(image: UploadFile = File(...)):
     image = read_image(await image.read())
     metadata = object_detector.detect(image)
@@ -40,3 +41,7 @@ async def predict(image: UploadFile = File(...)):
 
 def read_image(file: bytes) -> Image:
     return Image.open(BytesIO(file))
+
+if __name__ == "__main__":
+    print('main!')
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get('APP_PORT', 8000)))

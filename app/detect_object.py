@@ -34,22 +34,17 @@ class ObjectDetector:
         end = time.time()
         logger.info("Object detector started in {} ms", end - start)
 
-    def detect(self, image: Image) -> dict:
+    def detect(self, image: Image) -> ResponseModel:
         image = ObjectDetector.to_opencv(image)
-        # convert the image from BGR to RGB channel ordering and change the
-        # image from channels last to channels first ordering
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image = image.transpose((2, 0, 1))
-        # add the batch dimension, scale the raw pixel intensities to the
-        # range [0, 1], and convert the image to a floating point tensor
-        image = np.expand_dims(image, axis=0)
-        image = image / 255.0
-        image = torch.FloatTensor(image)
+        image = ObjectDetector.preprocess(image)
         # send the input to the device and pass the it through the network to
         # get the detections and predictions
         image = image.to(DEVICE)
         detections = self._model(image)[0]
 
+        return self.mk_output(detections)
+
+    def mk_output(self, detections: dict) -> ResponseModel:
         labels = []
         scores = []
         boxes = []
@@ -81,6 +76,18 @@ class ObjectDetector:
         return ResponseModel(
             detections=Detections(labels=labels, scores=scores, boxes=boxes)
         )
+
+    @staticmethod
+    def preprocess(image: np.ndarray) -> torch.FloatTensor:
+        # convert the image from BGR to RGB channel ordering and change the
+        # image from channels last to channels first ordering
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = image.transpose((2, 0, 1))
+        # add the batch dimension, scale the raw pixel intensities to the
+        # range [0, 1], and convert the image to a floating point tensor
+        image = np.expand_dims(image, axis=0)
+        image = image / 255.0
+        return torch.FloatTensor(image)
 
     @staticmethod
     def to_opencv(image: Image) -> np.ndarray:

@@ -2,7 +2,7 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 
 ENV APP_PORT=5000
 ENV CONFIG_PATH=config/config.json
-ENV UVICORN_PORT=$API_PORT
+ENV UVICORN_PORT=$APP_PORT
 
 WORKDIR /opt
 
@@ -14,3 +14,5 @@ RUN pip install --no-cache-dir --upgrade -r app/requirements.txt
 
 COPY ./app app
 COPY ./config config
+
+CMD ["python3", "-m", "app"]

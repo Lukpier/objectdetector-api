@@ -1,6 +1,9 @@
-# Pytorch Object Detector - Flask App
+# Pytorch Object Detector - FastAPI App
 
 Takes an image as input and returns metadata (JSON), extracted from the image
+
+## Changelog
+- <b>1.0.0</b> First release.
 
 ## Development
 
@@ -21,10 +24,24 @@ Run `python3 -m pytest` into project-root. This will trigger unit tests and a si
 `docker build -t objectdetector`
 
 ## Start app via Docker container
-`docker run -e API_PORT=5000 objectdetector`
+docker run: `docker run -e APP_PORT=5000 objectdetector`
+
+OR
+
+docker compose: `docker-compose up --build -d`
+
+## Configuration
+Default App configuration is located under config/config.json. It would be possibile to change configuration path by overriding env variable `CONFIG_PATH`.
+
+In configuration, it is possibile to change parameter related to:
+* confidence: decision threshold on prediction. Predictions which score is less than the threshold are filtered out.
+* model: you can choice betweet 3 different models at the moment ("frcnn-resnet", "frcnn-mobilenet", "retinanet")
 
 ## Bonus tip: Openapi
-Extract OpenApi 3.0 json definition by calling ....
+Extract OpenApi 3.0 json definition by calling http://localhost:$PORT/openapi.json
+
+## Bonus tip: Swagger
+Access SwaggerUI by calling http://localhost:$PORT/docs
 
 ## Notes
 

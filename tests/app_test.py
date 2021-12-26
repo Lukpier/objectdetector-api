@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from app.main import app
+from app.__main__ import app
 from app.version import VERSION
 from os import walk
 import pprint
@@ -22,5 +22,5 @@ def test_predict():
         with open(f"{base_dir}/{image}", "rb") as f:
             response = client.post("/api/predict", files={"image": f})
         end = time.time()
-        print(f'DONE IN {end - start} milliseconds - Entity:')
+        print(f'{image} DONE IN {end - start} milliseconds - Entity:')
         pprint.pprint(response.json())
