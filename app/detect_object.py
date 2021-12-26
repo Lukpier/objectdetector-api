@@ -1,4 +1,3 @@
-from typing import List
 from torchvision.models import detection
 import numpy as np
 import torch
@@ -10,9 +9,9 @@ from app.model import ResponseModel, Box, Detections
 import time
 
 MODELS = {
-	"frcnn-resnet": detection.fasterrcnn_resnet50_fpn,
-	"frcnn-mobilenet": detection.fasterrcnn_mobilenet_v3_large_320_fpn,
-	"retinanet": detection.retinanet_resnet50_fpn
+    "frcnn-resnet": detection.fasterrcnn_resnet50_fpn,
+    "frcnn-mobilenet": detection.fasterrcnn_mobilenet_v3_large_320_fpn,
+    "retinanet": detection.retinanet_resnet50_fpn,
 }
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -21,22 +20,20 @@ logger.setLevel(logging.INFO)
 
 
 class ObjectDetector:
-    
     def __init__(self, config: dict):
         start = time.time()
         logger.info("Starting object detector using Config={}", config)
         self._classes = config["coco_classes"]
-        self._model = MODELS[config["model"]](pretrained=True, progress=True,
-	        num_classes=91, pretrained_backbone=True).to(DEVICE)
+        self._model = MODELS[config["model"]](
+            pretrained=True, progress=True, num_classes=91, pretrained_backbone=True
+        ).to(DEVICE)
         self._model.eval()
-    
-        self._confidence = config["confidence"]
-        
-        end = time.time()
-        logger.info("Object detector started in {} ms", end- start)
 
-    
-        
+        self._confidence = config["confidence"]
+
+        end = time.time()
+        logger.info("Object detector started in {} ms", end - start)
+
     def detect(self, image: Image) -> dict:
         image = ObjectDetector.to_opencv(image)
         # convert the image from BGR to RGB channel ordering and change the
@@ -52,7 +49,7 @@ class ObjectDetector:
         # get the detections and predictions
         image = image.to(DEVICE)
         detections = self._model(image)[0]
-        
+
         labels = []
         scores = []
         boxes = []
@@ -71,23 +68,19 @@ class ObjectDetector:
                 idx = int(detections["labels"][i])
                 arr_box = detections["boxes"][i].detach().cpu().numpy()
                 (startX, startY, endX, endY) = arr_box.astype("float")
-                box = {"startX": startX, "startY": startY, "endX": endX, "endY":endY}
+                box = Box(startX=startX, startY=startY, endX=endX, endY=endY)
                 label = self._classes[idx]
-                logger.info(f"Detected entity: {self._classes[idx]}: {str(score * 100)}")
-                
+                logger.info(
+                    f"Detected entity: {self._classes[idx]}: {str(score * 100)}"
+                )
+
                 labels.append(label)
                 boxes.append(box)
                 scores.append(score)
-        
-        return {
-            "detections": {
-                "labels": labels,
-                "scores": scores,
-                "boxes": boxes
-            }
-        }
-    
 
+        return ResponseModel(
+            detections=Detections(labels=labels, scores=scores, boxes=boxes)
+        )
 
     @staticmethod
     def to_opencv(image: Image) -> np.ndarray:

@@ -1,7 +1,8 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 
-ENV API_PORT=5000
+ENV APP_PORT=5000
 ENV CONFIG_PATH=config/config.json
+ENV UVICORN_PORT=$API_PORT
 
 WORKDIR /opt
 
