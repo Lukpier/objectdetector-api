@@ -22,5 +22,5 @@ def test_predict():
         with open(f"{base_dir}/{image}", "rb") as f:
             response = client.post("/api/predict", files={"image": f})
         end = time.time()
-        print(f'{image} DONE IN {end - start} milliseconds - Entity:')
+        print(f'{image} DONE IN {end - start} seconds - Entity:')
         pprint.pprint(response.json())
