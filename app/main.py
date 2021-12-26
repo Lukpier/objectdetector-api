@@ -32,8 +32,8 @@ def hello():
                <b>{APP_NAME}: {VERSION}</b> 
             '''
 
-@app.post('/api/predict')
-async def predict(image: UploadFile = File(...), response_class=JSONResponse):
+@app.post('/api/predict', response_model=ResponseModel)
+async def predict(image: UploadFile = File(...), ):
     image = read_image(await image.read())
     metadata = object_detector.detect(image)
     return metadata
