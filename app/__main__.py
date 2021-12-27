@@ -43,5 +43,4 @@ def read_image(file: bytes) -> Image:
     return Image.open(BytesIO(file))
 
 if __name__ == "__main__":
-    print('main!')
     uvicorn.run(app, host=os.environ.get('APP_PORT', "0.0.0.0"), port=int(os.environ.get('APP_PORT', 8000)))

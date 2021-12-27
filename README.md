@@ -51,6 +51,15 @@ In configuration, it is possibile to change parameter related to:
 * confidence: decision threshold on prediction. Predictions which score is less than the threshold are filtered out.
 * model: you can choice betweet 3 different models at the moment ("frcnn-resnet", "frcnn-mobilenet", "retinanet")
 
+## Demo
+The [demo](demo.sh) script works as the following:
+
+1. Lookups for APP_HOST and APP_PORT variables. If not defined, they assume default values of (0.0.0.0, 5000).
+2. start docker service at the specified address (logged in console).
+3. Waits 20 seconds for service startup / model downloading (second time can be faster, SO PLEASE ADJUST SLEEP ACCORDINGLY).
+4. performs a prediction request for every file comprised in ./tests/input folder.
+5. Outputs filename, extracted metadata and time to perform the request.
+
 ## Bonus tip: Openapi
 Extract OpenApi 3.0 json definition by calling http://$HOST:$PORT/openapi.json
 
