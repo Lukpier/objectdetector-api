@@ -68,7 +68,3 @@ Extract OpenApi 3.0 json definition by calling http://$HOST:$PORT/openapi.json
 
 ## Bonus tip: Swagger
 Access SwaggerUI by calling http://$HOST:$PORT/docs
-
-## Notes
-
-- [ ] Startup might be slow for the first time locally and every time for Dockerized version: app code must download the desired model before prediction making.
