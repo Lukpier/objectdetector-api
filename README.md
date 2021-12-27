@@ -52,10 +52,10 @@ In configuration, it is possibile to change parameter related to:
 * model: you can choice betweet 3 different models at the moment ("frcnn-resnet", "frcnn-mobilenet", "retinanet")
 
 ## Bonus tip: Openapi
-Extract OpenApi 3.0 json definition by calling http://localhost:$PORT/openapi.json
+Extract OpenApi 3.0 json definition by calling http://$HOST:$PORT/openapi.json
 
 ## Bonus tip: Swagger
-Access SwaggerUI by calling http://localhost:$PORT/docs
+Access SwaggerUI by calling http://$HOST:$PORT/docs
 
 ## Notes
 
