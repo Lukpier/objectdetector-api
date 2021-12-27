@@ -16,4 +16,11 @@ COPY ./app app
 COPY ./config config
 EXPOSE ${APP_PORT}
 
+RUN mkdir -p .cache/torch/hub/checkpoints
+RUN wget https://download.pytorch.org/models/retinanet_resnet50_fpn_coco-eeacb38b.pth -O .cache/torch/hub/checkpoints/retinanet_resnet50_fpn_coco-eeacb38b.pth
+RUN wget https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth  -O .cache/torch/hub/checkpoints/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth
+RUN wget https://download.pytorch.org/models/fasterrcnn_mobilenet_v3_large_320_fpn-907ea3f9.pth  -O .cache/torch/hub/checkpoints/fasterrcnn_mobilenet_v3_large_320_fpn-907ea3f9.pth
+
+ENV TORCH_HOME=/opt/.cache/torch
+
 CMD ["python3", "-m", "app"]
