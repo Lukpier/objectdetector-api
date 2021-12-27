@@ -4,8 +4,11 @@ services:
   objectdetector:
     build: .
     command: python3 -m app
+    volumes:
+      - /tmp/output:/tmp/output
     environment:
       - APP_PORT=5000
       - APP_HOST=0.0.0.0
+      - OUTPUT_DIR=/tmp/output
     ports:
       - 5000:5000
