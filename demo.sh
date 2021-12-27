@@ -4,6 +4,7 @@ APP_HOST=${APP_HOST:-0.0.0.0}
 APP_PORT=${APP_PORT:-5000}
 
 echo "Starting ObjectDetector on http://$APP_HOST:$APP_PORT"
+docker container rm objectdetector
 docker build -t objectdetector .
 docker run -e APP_PORT=$APP_PORT -e APP_HOST=$APP_HOST -d --name objectdetector objectdetector
 

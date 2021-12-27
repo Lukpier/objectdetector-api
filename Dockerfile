@@ -14,5 +14,6 @@ RUN pip install --no-cache-dir --upgrade -r app/requirements.txt
 
 COPY ./app app
 COPY ./config config
+EXPOSE ${APP_PORT}
 
 CMD ["python3", "-m", "app"]
